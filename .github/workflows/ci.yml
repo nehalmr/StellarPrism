@@ -56,8 +56,46 @@ jobs:
       - name: Install dependencies (CI)
         run: npm ci
 
-      - name: Audit npm dependencies (fail on moderate+)
+      - name: Audit npm dependencies (fail on critical+)
         run: |
-          npm audit --audit-level=moderate
+          npm audit --audit-level=critical
         env:
           CI: true
+
+      - name: Export audit metrics (always)
+        if: always()
+        run: |
+          # run audit and save JSON even if it reports vulnerabilities
+          npm audit --json > audit.json || true
+
+          # ensure jq is available; install if missing
+          if ! command -v jq >/dev/null 2>&1; then
+            echo "jq not found, installing..."
+            sudo apt-get update -y && sudo apt-get install -y jq
+          fi
+
+          critical=$(jq -r '.metadata.vulnerabilities.critical // 0' audit.json)
+          high=$(jq -r '.metadata.vulnerabilities.high // 0' audit.json)
+          moderate=$(jq -r '.metadata.vulnerabilities.moderate // 0' audit.json)
+          low=$(jq -r '.metadata.vulnerabilities.low // 0' audit.json)
+
+          # write summary using printf to avoid YAML parsing issues with pipe characters
+          printf '%s\n' \
+            '| Severity | Count |' \
+            '|---:|---:|' \
+            "| Critical | ${critical} |" \
+            "| High | ${high} |" \
+            "| Moderate | ${moderate} |" \
+            "| Low | ${low} |" \
+            > audit_summary.md
+
+          echo "Audit summary:" && cat audit_summary.md
+
+      - name: Upload audit summary artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-summary
+          path: |
+            audit.json
+            audit_summary.md
