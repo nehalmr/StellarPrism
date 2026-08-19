@@ -68,4 +68,12 @@ Contributing
 
 Open issues or pull requests on GitHub: [https://github.com/nehalmr](https://github.com/nehalmr/stellarprism.git)
 
-License 
+License
+
+This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
+
+Release
+
+- Initial release: v1.0.0 (2026-08-19) — baseline features include the interactive 3D stellarator visualization, GPU-based plasma shader, heating elements, and real-time analytics via Chart.js. See [CHANGELOG.md](CHANGELOG.md) for details.
+
+Project status: Initial release
