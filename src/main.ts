@@ -69,7 +69,7 @@ let plasmaGeom = makePlasmaGeometry(plasmaRadius, plasmaThickness);
 
 // shader configuration
 const MAX_HEAT = 16;
-const plasmaUniforms: any = {
+const plasmaUniforms: Record<string, { value: any }> = {
   heatCount: { value: 0 },
   // fallback: heatPositions/powers arrays (if supported)
   heatPositions: { value: new Array(MAX_HEAT).fill(new THREE.Vector3()) },
@@ -284,7 +284,8 @@ function computeAvgTemp() {
 // import custom data
 document.getElementById('analytics')!.insertAdjacentHTML('beforeend', '<label class="stat">Import data: <input id="importFile" type="file" accept=".json,.csv"></label>');
 document.getElementById('importFile')!.addEventListener('change', (ev) => {
-  const f = (ev as any).target.files[0];
+  const input = ev.target as HTMLInputElement;
+  const f = input.files ? input.files[0] : undefined;
   if (!f) return;
   const reader = new FileReader();
   reader.onload = () => {

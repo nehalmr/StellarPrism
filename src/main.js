@@ -94,7 +94,7 @@ const tempChart = new Chart(tempCtx, { type:'line', data:{ labels: Array(100).fi
 let lastColorUpdate = 0;
 function computeVertexTemperatures(){ const pos = plasmaGeom.attributes.position; const colorAttr = plasmaGeom.attributes.color; const count = pos.count; const v = new THREE.Vector3(); for(let i=0;i<count;i++){ v.fromBufferAttribute(pos,i); plasmaMesh.localToWorld(v.copy(v)); let accum=0; for(const h of heatingElems){ const d2 = h.position.distanceToSquared(v); accum += (h.userData.power||1)/(1 + d2); } const temp = Math.min(100, accum*8); const t = Math.max(0, Math.min(1, temp/80)); const col = new THREE.Color(); col.setHSL(0.05*(1-t),1,0.5+0.25*t); colorAttr.array[i*3+0]=col.r; colorAttr.array[i*3+1]=col.g; colorAttr.array[i*3+2]=col.b; } colorAttr.needsUpdate = true; }
 
-function computeMagneticFieldSamples(){ const samples=60; const data=[]; for(let i=0;i<samples;i++){ const ang=(i/samples)*Math.PI*2; const x=(coreRadius)*Math.cos(ang); const y=(coreRadius)*Math.sin(ang); const p=new THREE.Vector3(x,0,y); let B=0.01; for(const h of heatingElems){ const d=p.distanceTo(h.position); B+=(h.userData.power||1)/(1 + d*d); } data.push(B*10); } return data; }
+// computeMagneticFieldSamples removed (unused) to satisfy linter
 
 function computeAvgTemp(){ if(heatingElems.length===0) return 0; let sum=0; for(const h of heatingElems) sum += (h.userData.power||1); return sum*5; }
 
