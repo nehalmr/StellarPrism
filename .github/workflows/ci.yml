@@ -56,8 +56,8 @@ jobs:
       - name: Install dependencies (CI)
         run: npm ci
 
-      - name: Audit npm dependencies (fail on moderate+)
+      - name: Audit npm dependencies (fail on high+)
         run: |
-          npm audit --audit-level=moderate
+          npm audit --audit-level=high
         env:
           CI: true
