@@ -69,7 +69,9 @@ let plasmaGeom = makePlasmaGeometry(plasmaRadius, plasmaThickness);
 
 // shader configuration
 const MAX_HEAT = 16;
-const plasmaUniforms: Record<string, { value: any }> = {
+type UniformValue = number | THREE.Vector3[] | Float32Array | THREE.DataTexture | null | boolean;
+type UniformRecord = Record<string, { value: UniformValue }>;
+const plasmaUniforms: UniformRecord = {
   heatCount: { value: 0 },
   // fallback: heatPositions/powers arrays (if supported)
   heatPositions: { value: new Array(MAX_HEAT).fill(new THREE.Vector3()) },
