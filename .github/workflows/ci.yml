@@ -56,9 +56,6 @@ jobs:
       - name: Install dependencies (CI)
         run: npm ci
 
-      - name: Dependency review
-        uses: github/dependency-review-action@v3
-
       - name: Audit npm dependencies (fail on moderate+)
         run: |
           npm audit --audit-level=moderate
