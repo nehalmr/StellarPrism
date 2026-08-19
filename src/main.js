@@ -100,7 +100,29 @@ function computeAvgTemp(){ if(heatingElems.length===0) return 0; let sum=0; for(
 
 // data import
 document.getElementById('analytics').insertAdjacentHTML('beforeend', '<label class="stat">Import data: <input id="importFile" type="file" accept=".json,.csv"></label>');
-document.getElementById('importFile').addEventListener('change', (ev)=>{ const f = ev.target.files[0]; if(!f) return; const reader = new FileReader(); reader.onload = () => { try{ const txt = reader.result; if(f.name.endsWith('.json')){ const arr = JSON.parse(txt); tempChart.data.datasets[0].data = arr.slice(0, tempChart.data.labels.length); tempChart.update(); } else { const lines = txt.split(/\r?\n/).filter(Boolean); const vals = lines.map(l=>parseFloat(l.split(',')[1]||l)); tempChart.data.datasets[0].data = vals.slice(0, tempChart.data.labels.length); tempChart.update(); } }catch(e){ alert('Failed to parse'); } }; reader.readAsText(f); });
+document.getElementById('importFile').addEventListener('change', (ev)=>{
+  const f = ev.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const txt = reader.result;
+      if(f.name.endsWith('.json')){
+        const arr = JSON.parse(txt);
+        tempChart.data.datasets[0].data = arr.slice(0, tempChart.data.labels.length);
+        tempChart.update();
+      } else {
+        const lines = txt.split(/\r?\n/).filter(Boolean);
+        const vals = lines.map(l=>parseFloat(l.split(',')[1]||l));
+        tempChart.data.datasets[0].data = vals.slice(0, tempChart.data.labels.length);
+        tempChart.update();
+      }
+    } catch {
+      alert('Failed to parse');
+    }
+  };
+  reader.readAsText(f);
+});
 
 // loop
 let autoRotate = false;

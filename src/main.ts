@@ -181,7 +181,7 @@ function updateUniformsFromHeating() {
       plasmaMat.uniforms.heatPositions.value[i] = positions[i];
       plasmaMat.uniforms.heatPowers.value[i] = powers[i];
     }
-  } catch (e) {
+  } catch {
     // fallback to uniforms
     plasmaMat.uniforms.useTexture.value = false;
     for (let i = 0; i < MAX_HEAT; i++) {
@@ -303,9 +303,9 @@ document.getElementById('importFile')!.addEventListener('change', (ev) => {
         tempChart.data.datasets[0].data = vals.slice(0, tempChart.data.labels!.length as number);
         tempChart.update();
       }
-    } catch (e) {
-      alert('Failed to parse');
-    }
+    } catch {
+        alert('Failed to parse');
+      }
   };
   reader.readAsText(f);
 });
