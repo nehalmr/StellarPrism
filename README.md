@@ -4,7 +4,7 @@ StellarPrism is an interactive 3D Stellarator visualization and lightweight plas
 
 Developer
 - Name: nehalmr
-- GitHub: @nehalmr
+- GitHub: [@nehalmr](https://github.com/nehalmr/stellarprism.git)
 
 Quick start
 
@@ -66,7 +66,7 @@ Notes & recommendations
 
 Contributing
 
-Open issues or pull requests on GitHub: https://github.com/nehalmr
+Open issues or pull requests on GitHub: [https://github.com/nehalmr](https://github.com/nehalmr/stellarprism.git)
 
 License
 
