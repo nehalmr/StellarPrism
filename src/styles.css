@@ -1,12 +1,12 @@
 html,body{height:100%;margin:0;background:#000;color:#fff;font-family:system-ui,Arial}
-#container{width:100%;height:100vh;position:relative;overflow:hidden}
-#ui{position:fixed;left:12px;top:12px;background:rgba(44,62,80,0.95);padding:12px;border-radius:8px;z-index:10;width:320px}
-#ui h3{margin:0 0 8px 0;font-size:14px}
-#ui label{display:block;margin-top:8px;font-size:13px}
-#ui input[type=range]{width:100%}
-#ui .row{display:flex;gap:8px;align-items:center}
-#ui button{background:#1f2b33;color:#fff;border:0;padding:8px 10px;border-radius:6px;cursor:pointer}
-#analytics{position:fixed;right:12px;top:12px;background:rgba(20,20,20,0.9);padding:12px;border-radius:8px;z-index:10;width:360px}
+/* leave navbar space for fixed-top */
+body{padding-top:56px}
+#container{width:100%;height:calc(100vh - 56px);position:relative;overflow:hidden}
+/* Offcanvas-based UI uses Bootstrap styling; provide small overrides */
+.offcanvas-body label{display:block;margin-top:8px;font-size:13px}
+.form-range{width:100%}
+.stat{font-size:13px;margin-top:8px;color:var(--bs-body-color)}
+.credits{position:fixed;left:12px;bottom:12px;color:#bbb;font-size:12px}
+
+/* Ensure canvas inside analytics keeps a fixed height */
 #analytics canvas{width:100%;height:160px;display:block}
-.stat{font-size:13px;margin-top:8px}
-.credits{position:fixed;left:12px;bottom:12px;color:#888;font-size:12px}

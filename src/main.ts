@@ -7,30 +7,57 @@ type TempChartLike = {
 };
 let tempChart: TempChartLike | null = null;
 
-// Create UI HTML
+// Create UI HTML using Bootstrap components (navbar + offcanvas)
 const container = document.getElementById('container') as HTMLDivElement;
 container.insertAdjacentHTML('beforebegin', `
-  <div id="ui">
-    <h3>Stellarator Controls</h3>
-    <div class="row">
-      <button id="addHeating">Add Heating</button>
-      <button id="removeHeating">Remove</button>
-      <button id="pulse">Trigger Pulse</button>
+  <nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">StellarPrism</a>
+      <div class="d-flex">
+        <button class="btn btn-outline-light me-2" data-bs-toggle="offcanvas" data-bs-target="#controlsOffcanvas" aria-controls="controlsOffcanvas">Controls</button>
+        <button class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#analyticsOffcanvas" aria-controls="analyticsOffcanvas">Analytics</button>
+      </div>
     </div>
-    <label>Heating Power: <span id="powerVal">1.0</span></label>
-    <input id="power" type="range" min="0" max="5" step="0.1" value="1">
-    <label>Plasma Radius: <span id="pRadiusVal">6.0</span></label>
-    <input id="pRadius" type="range" min="2" max="12" step="0.1" value="6">
-    <label>Plasma Thickness: <span id="pThicknessVal">2.0</span></label>
-    <input id="pThickness" type="range" min="0.5" max="6" step="0.1" value="2">
-    <label class="row"><input id="autoRotate" type="checkbox"> Auto rotate</label>
+  </nav>
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="controlsOffcanvas" aria-labelledby="controlsLabel">
+    <div class="offcanvas-header">
+      <h5 id="controlsLabel" class="offcanvas-title">Stellarator Controls</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="mb-2 d-flex gap-2">
+        <button id="addHeating" class="btn btn-primary">Add Heating</button>
+        <button id="removeHeating" class="btn btn-secondary">Remove</button>
+        <button id="pulse" class="btn btn-warning">Trigger Pulse</button>
+      </div>
+      <label>Heating Power: <span id="powerVal">1.0</span></label>
+      <input id="power" class="form-range" type="range" min="0" max="5" step="0.1" value="1">
+      <label>Plasma Radius: <span id="pRadiusVal">6.0</span></label>
+      <input id="pRadius" class="form-range" type="range" min="2" max="12" step="0.1" value="6">
+      <label>Plasma Thickness: <span id="pThicknessVal">2.0</span></label>
+      <input id="pThickness" class="form-range" type="range" min="0.5" max="6" step="0.1" value="2">
+      <div class="form-check mt-2">
+        <input id="autoRotate" class="form-check-input" type="checkbox">
+        <label class="form-check-label" for="autoRotate">Auto rotate</label>
+      </div>
+    </div>
   </div>
 `);
+
 container.insertAdjacentHTML('afterend', `
-  <div id="analytics">
-    <canvas id="tempChart"></canvas>
-    <div class="stat">Heating elements: <strong id="heCount">0</strong></div>
-    <div class="stat">Avg Temp: <strong id="avgTemp">0.00</strong></div>
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="analyticsOffcanvas" aria-labelledby="analyticsLabel">
+    <div class="offcanvas-header">
+      <h5 id="analyticsLabel" class="offcanvas-title">Analytics</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div id="analytics">
+        <canvas id="tempChart"></canvas>
+        <div class="stat">Heating elements: <strong id="heCount">0</strong></div>
+        <div class="stat">Avg Temp: <strong id="avgTemp">0.00</strong></div>
+      </div>
+    </div>
   </div>
   <div class="credits">Built with Three.js + Chart.js</div>
 `);
