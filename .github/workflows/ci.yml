@@ -79,14 +79,15 @@ jobs:
           moderate=$(jq -r '.metadata.vulnerabilities.moderate // 0' audit.json)
           low=$(jq -r '.metadata.vulnerabilities.low // 0' audit.json)
 
-          cat > audit_summary.md <<'EOF'
-| Severity | Count |
-|---:|---:|
-| Critical | ${critical} |
-| High | ${high} |
-| Moderate | ${moderate} |
-| Low | ${low} |
-EOF
+          # write summary using printf to avoid YAML parsing issues with pipe characters
+          printf '%s\n' \
+            '| Severity | Count |' \
+            '|---:|---:|' \
+            "| Critical | ${critical} |" \
+            "| High | ${high} |" \
+            "| Moderate | ${moderate} |" \
+            "| Low | ${low} |" \
+            > audit_summary.md
 
           echo "Audit summary:" && cat audit_summary.md
 
