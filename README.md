@@ -68,6 +68,4 @@ Contributing
 
 Open issues or pull requests on GitHub: [https://github.com/nehalmr](https://github.com/nehalmr/stellarprism.git)
 
-License
-
-This project is provided as an example and includes no license file by default. Add a license if you plan to publish.
+License 
