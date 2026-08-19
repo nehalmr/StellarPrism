@@ -8,7 +8,7 @@
     "preview": "vite preview --port 5173",
     "lint": "eslint . --ext .ts,.js",
     "format": "prettier --write .",
-    "test": "vitest"
+    "test": "vitest --environment=node"
   },
   "dependencies": {
     "chart.js": "^3.9.1",
