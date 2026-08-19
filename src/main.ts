@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import Chart from 'chart.js/auto';
+// Chart.js is lazy-loaded to reduce initial bundle size
+type TempChartLike = {
+  data: { datasets: { data: number[] }[] };
+  update: (mode?: unknown) => void;
+};
+let tempChart: TempChartLike | null = null;
 
 // Create UI HTML
 const container = document.getElementById('container') as HTMLDivElement;
@@ -62,7 +67,7 @@ scene.add(coreMesh);
 let plasmaRadius = 6;
 let plasmaThickness = 2;
 function makePlasmaGeometry(radius: number, thickness: number) {
-  return new THREE.TorusBufferGeometry(radius, thickness, 32, 160);
+  return new THREE.TorusGeometry(radius, thickness, 32, 160);
 }
 
 let plasmaGeom = makePlasmaGeometry(plasmaRadius, plasmaThickness);
@@ -269,12 +274,19 @@ function updateCounts() {
 }
 
 // Chart
-const tempCtx = (document.getElementById('tempChart') as HTMLCanvasElement).getContext('2d')!;
-const tempChart = new Chart(tempCtx, {
-  type: 'line',
-  data: { labels: Array(100).fill(''), datasets: [{ label: 'Avg Temp', data: Array(100).fill(0), borderColor: '#ff8844', backgroundColor: 'rgba(255,136,68,0.12)', tension: 0.2 }] },
-  options: { animation: false, responsive: true, maintainAspectRatio: false }
-});
+async function initChart() {
+  const ChartModule = await import('chart.js/auto');
+  const Chart = ChartModule.default || ChartModule;
+  const tempCtx = (document.getElementById('tempChart') as HTMLCanvasElement).getContext('2d')!;
+  tempChart = new Chart(tempCtx, {
+    type: 'line',
+    data: { labels: Array(100).fill(''), datasets: [{ label: 'Avg Temp', data: Array(100).fill(0), borderColor: '#ff8844', backgroundColor: 'rgba(255,136,68,0.12)', tension: 0.2 }] },
+    options: { animation: false, responsive: true, maintainAspectRatio: false }
+  });
+}
+
+// initialize chart asynchronously
+initChart().catch(() => { /* non-fatal */ });
 
 function computeAvgTemp() {
   if (heatingElems.length === 0) return 0;
@@ -295,13 +307,17 @@ document.getElementById('importFile')!.addEventListener('change', (ev) => {
       const txt = reader.result as string;
       if (f.name.endsWith('.json')) {
         const arr = JSON.parse(txt);
-        tempChart.data.datasets[0].data = arr.slice(0, tempChart.data.labels!.length as number);
-        tempChart.update();
+        if (tempChart) {
+          tempChart.data.datasets[0].data = arr.slice(0, tempChart.data.labels!.length as number);
+          tempChart.update();
+        }
       } else {
         const lines = txt.split(/\r?\n/).filter(Boolean);
         const vals = lines.map((l) => parseFloat(l.split(',')[1] || l));
-        tempChart.data.datasets[0].data = vals.slice(0, tempChart.data.labels!.length as number);
-        tempChart.update();
+        if (tempChart) {
+          tempChart.data.datasets[0].data = vals.slice(0, tempChart.data.labels!.length as number);
+          tempChart.update();
+        }
       }
     } catch {
         alert('Failed to parse');
@@ -318,9 +334,11 @@ function animate() {
   // Update chart and avg temp
   const avg = computeAvgTemp();
   document.getElementById('avgTemp')!.textContent = avg.toFixed(2);
-  tempChart.data.datasets[0].data.push(avg);
-  tempChart.data.datasets[0].data.shift();
-  tempChart.update('none');
+  if (tempChart) {
+    tempChart.data.datasets[0].data.push(avg);
+    tempChart.data.datasets[0].data.shift();
+    tempChart.update('none');
+  }
   if (autoRotate) {
     coreMesh.rotation.z += 0.002;
     plasmaMesh.rotation.z += 0.002;
