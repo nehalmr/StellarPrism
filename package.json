@@ -11,7 +11,7 @@
     "test": "vitest --environment=node"
   },
   "dependencies": {
-    "chart.js": "^3.9.1",
+    "chart.js": "^4.5.1",
     "three": "^0.185.1"
   },
   "devDependencies": {
